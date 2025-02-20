@@ -9,20 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\viewController;
 use Illuminate\Support\Facades\Route;
-use function Pest\Laravel\get;
-
-Route::get('/', function () {
-    return view('home');
-});
-
-
-Route::get('/cree', [viewController::class, 'cree'])->name('cree');
-
-
-Route::get('/events', [viewController::class, 'listes'])->name('events');
-Route::get('/dashboard', [viewController::class, 'index'])->name('dashboard');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -70,5 +57,3 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
-
-require __DIR__ . "/auth.php";
