@@ -19,10 +19,12 @@
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 class="text-2xl font-bold text-center text-gray-700 mb-6">Créer un Nouvel Événement</h2>
 
-            <form action="/events/store" method="POST" class="space-y-4">
-                <!-- Protection CSRF (si utilisé avec Laravel) -->
+            <form action="{{ route('cree') }}" method="POST" class="space-y-4">
+            @csrf
+              <!-- Protection CSRF (si utilisé avec Laravel) -->
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
+                
+                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                 <div>
                     <label class="block text-gray-700 font-semibold">Titre :</label>
                     <input type="text" name="titre" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">

@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
 {
@@ -27,12 +29,16 @@ class Event extends Model
         'max_participants'
     ];
 
-    // // Relation avec l'utilisateur (un événement appartient à un utilisateur)
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    
-    // }
+    public function creator(){
+        return $this->belongsTo(User::class);
+    }
+   public function participants(){
+    return $this->belongsToMany(User::class);
+   }
+   public function comment(){
+    return $this->hasMany(Comment::class);
+   }
+   
 }
 
 

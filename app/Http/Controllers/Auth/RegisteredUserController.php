@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+ use Illuminate\Database\Eloquent\Model; 
+ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RegisteredUserController extends Controller
 {
@@ -47,4 +49,4 @@ class RegisteredUserController extends Controller
 
         return redirect(route('dashboard', absolute: false));
     }
-}
+}?>
