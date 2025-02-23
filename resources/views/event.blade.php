@@ -22,9 +22,9 @@
             <form action="{{ route('cree') }}" method="POST" class="space-y-4">
             @csrf
               <!-- Protection CSRF (si utilisé avec Laravel) -->
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 
-                <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                
+               
                 <div>
                     <label class="block text-gray-700 font-semibold">Titre :</label>
                     <input type="text" name="titre" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
@@ -34,11 +34,12 @@
                     <label class="block text-gray-700 font-semibold">Description :</label>
                     <textarea name="description" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                 </div>
-
                 <div>
-                    <label class="block text-gray-700 font-semibold">Lieu (Adresse) :</label>
-                    <input type="text" name="lieu" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                </div>
+                <label for="lien">Lien:</label>
+    <input type="text" name="lien"  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+
+</div>
+
 
                 <div>
                     <label class="block text-gray-700 font-semibold">Date et Heure :</label>

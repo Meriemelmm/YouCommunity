@@ -16,6 +16,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
  use Illuminate\Database\Eloquent\Model; 
  use Illuminate\Database\Eloquent\Factories\HasFactory;
+ use Illuminate\Validation\ValidationException;
 
  
 
@@ -29,72 +30,92 @@ class EventController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function create()
-    // {
-    //     //
-    // }
+   
 
-    // /**
-    //  * Store a newly created resource in storage.
-    //  */
-    
-    // public function store(Request $request)
-    // {
-    //     $request->validate(['titre'=>['required','string','max:225'],
-    //     'description'=>['required','string','max:250'],
-    //     'lien'=>['required','string','max:225'],
-    //     'date_heure'=>['required','date'],
-    //     'categorie'=>['required','in:sport,musique,éducation,autre'],
-    //     'max_participants'=>['required','integer','min:1'],
-       
-    // ]);
-    // dd('hello');
-    // $event= Event::create([
-    //     'titre'=>$request->titre,
-    //     'description'=>$request->description,
-    //     'lien'=>$request->lien,
-    //     'date_heure'=>$request->date_heure,
-    //     'categorie'=>$request->categorie,
-    //     'max_participants'=>$request->max_participants,
-    //     'user_id'=>$request->user_id
 
-    // ]);
-    // return redirect()->route('/')->with('success', 'Événement créé avec succès.');
-       
-    // }
-    public function store(Request $request)
+
+
+     
+
+
+public function store(Request $request)
 {
-    // Validation des données
-    $validated = $request->validate([
-        'titre' => ['required', 'string', 'max:225'],
-        'description' => ['required', 'string', 'max:250'],
-        'lien' => ['required', 'string', 'max:225'],
-        'date_heure' => ['required', 'date'],
-        'categorie' => ['required', 'in:sport,musique,éducation,autre'],
-        'max_participants' => ['required', 'integer', 'min:1'],
-        // Pas besoin de valider `user_id` si tu utilises Auth::id()
-    ]);
+   
 
-    // Récupère l'ID de l'utilisateur authentifié
-    $user_id = Auth::id();
+   
+   
+ 
 
-    // Crée l'événement
-    $event = Event::create([
-        'titre' => $request->titre,
-        'description' => $request->description,
-        'lien' => $request->lien,
-        'date_heure' => $request->date_heure,
-        'categorie' => $request->categorie,
-        'max_participants' => $request->max_participants,
-        'user_id' => $user_id  // Utilisation de Auth::id() pour l'ID de l'utilisateur
-    ]);
+   
+    
+    try {
+        $validated = $request->validate([
+            'titre' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:250'],
+          
+           'lien' => 'nullable|string|max:255',
 
-    // Redirige avec un message de succès
-    return redirect()->route('/')->with('success', 'Événement créé avec succès.');
+            'date_heure' => ['required', 'date'],
+            'categorie' => ['required', 'in:sport,musique,éducation,autre'],
+            'max_participants' => ['required', 'integer', 'min:1'],
+        ]);
+        $lieu = isset($validated['lien']) ? $validated['lien'] : null;
+     
+        
+ 
+        $event = Event::create([
+            'titre' => $request->titre,
+            'description' =>$request->description,
+           
+             'lien' => $lieu,
+            'date_heure' =>$request->date_heure,
+            'categorie' => $request->categorie,
+            'max_participants' => $request->max_participants,
+            'user_id' => Auth::id(),
+        ]);
+     
+     
+
+        if ($event) {
+             return redirect()->route('cree')->with('success', 'Événement créé avec succès ');
+            
+        } else {
+            return redirect()->back()->with('error', 'Échec de l\'insertion ');
+        } 
+
+    } catch (ValidationException $e) {
+        dd("erreur:", $e->errors()); 
+    }
+       
+    
+    
+    
+
+   
 }
+public function showEvents() {
+    try {
+        $events = Event::all(); 
+        return view('liste', ['events' => $events]); 
+
+    } catch (ValidationException $e) {
+        dd("Erreur", $e->errors());
+    }
+}
+
+public function showmyevents(){
+    try {
+        $userid = Auth::id();
+        $events = Event::where('user_id', $userid)->get();
+ 
+        return view('my_events', ['events' => $events]); 
+    } catch (\Exception $e) {
+        return back()->withErrors(['error' => 'Une erreur est survenue : ' . $e->getMessage()]);
+    }
+   
+
+}
+
 
     
 
@@ -103,7 +124,8 @@ class EventController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
+
     }
 
     /**
@@ -125,8 +147,22 @@ class EventController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy($remove_id)
+{
+    try {
+        $event = Event::find($remove_id);
+
+        if (!$event) {
+            return back()->withErrors(['error' => 'Événement non trouvé.']);
+        }
+
+        $event->delete();
+
+        return redirect()->route('myEvents')->with('success', 'Événement supprimé avec succès !');
+
+    } catch (\Exception $e) {
+        return back()->withErrors(['error' => 'Une erreur est survenue : ' . $e->getMessage()]);
     }
+}
+
 }

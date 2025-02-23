@@ -19,10 +19,13 @@ Route::get('/', function () {
 });
 
 
-Route::get('/cree', [viewController::class, 'cree'])->name('cree');
+Route::get('cree', [viewController::class, 'cree'])->name('cree');
+Route::delete('/myEvents/{remove_id}', [EventController::class, 'destroy'])->name('myEvents.destroy');
 
 
 Route::get('/events', [viewController::class, 'listes'])->name('events');
+Route::get('/events', [EventController::class, 'showEvents'])->name('events');
+Route::get('/myEvents', [EventController::class, 'showmyevents'])->name('myEvents');
 Route::get('/dashboard', [viewController::class, 'index'])->name('dashboard');
 
 Route::middleware('guest')->group(function () {
@@ -72,8 +75,9 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
         
-
-Route::post('cree', [EventController ::class,'store']);
+Route::post('cree', [EventController::class, 'store'])->name('cree');
+        
 });
+
 
 require __DIR__ . "/auth.php";

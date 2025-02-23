@@ -21,6 +21,7 @@
                 @auth
     <li><a href="/profile">Profil</a></li>
     <li><a href="{{ route('cree') }}">Créer un événement</a></li>
+    <li><a href="{{ route('myEvents') }}"> mes événement</a></li>
     <li>
         <form action="{{ route('logout') }}" method="POST" style="display: inline;">
             @csrf

@@ -26,7 +26,7 @@ class Event extends Model
         'date_heure',
         'categorie',
         'user_id',
-        'max_participants'
+        'max_participants','user_id'
     ];
 
     public function creator(){
