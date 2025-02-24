@@ -21,6 +21,8 @@ Route::get('/', function () {
 
 Route::get('cree', [viewController::class, 'cree'])->name('cree');
 Route::delete('/myEvents/{remove_id}', [EventController::class, 'destroy'])->name('myEvents.destroy');
+Route::get('/event_edit/{edit_id}', [EventController::class, 'show'])->name('event.show');
+Route::put('/event_edit/{event_id}', [EventController::class, 'update'])->name('myEvents.update');
 
 
 Route::get('/events', [viewController::class, 'listes'])->name('events');

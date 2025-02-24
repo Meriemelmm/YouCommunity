@@ -59,15 +59,15 @@ public function store(Request $request)
             'categorie' => ['required', 'in:sport,musique,éducation,autre'],
             'max_participants' => ['required', 'integer', 'min:1'],
         ]);
-        $lieu = isset($validated['lien']) ? $validated['lien'] : null;
+        // $lieu = isset($validated['lien']) ? $validated['lien'] : null;
      
-        
+    
  
         $event = Event::create([
             'titre' => $request->titre,
             'description' =>$request->description,
            
-             'lien' => $lieu,
+             'lien' => $request->lien,
             'date_heure' =>$request->date_heure,
             'categorie' => $request->categorie,
             'max_participants' => $request->max_participants,
@@ -122,16 +122,25 @@ public function showmyevents(){
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        
+    public function show( $edit_id)
+
+    { try{
+        $event= Event::find($edit_id);
+       
+           return view('event_edit', compact('event'));
+
+    }
+        catch( ValidationException $e){
+            return back()->withErrors(['error' => 'Une erreur est survenue : ' . $e->getMessage()]); 
+        }
+    
 
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit()
     {
         //
     }
@@ -139,9 +148,34 @@ public function showmyevents(){
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $event_id)
+
     {
-        //
+        $validated = $request->validate([
+            'titre' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:255'],
+            'lieu' => 'nullable|string',
+            'date_heure' => ['required', 'date'],
+            'categorie' =>  ['required', 'in:sport,musique,éducation,autre'],
+            'max_participants' => ['required', 'integer', 'min:1'],
+
+        ]);
+       
+        
+        
+       $update= Event::where('id', $event_id)->update(['titre' => $request->titre,
+            'description' =>$request->description,
+           
+             'lieu' => $request->lien,
+            'date_heure' =>$request->date_heure,
+            'categorie' => $request->categorie,
+            'max_participants' => $request->max_participants,]);
+         
+
+          
+            return redirect()->route('myEvents')->with('success', 'Événement update avec succès !');
+       
+       
     }
 
     /**

@@ -20,7 +20,7 @@
                 @foreach($events as $event)
                     <div class="bg-white p-6 rounded-lg shadow-lg">
                         <h3 class="text-xl font-bold text-gray-700">{{$event->titre}}</h3>
-                        <p class="text-gray-600 mt-2">Un grand concert avec des artistes célèbres.</p>
+                        <p class="text-gray-600 mt-2">{{$event->description}}</p>
                         <p class="mt-4 text-gray-500"><strong>📍 Lieu :</strong> {{$event->lien}}</p>
                         <p class="text-gray-500"><strong>📅 Date :</strong> {{$event->date_heure}}</p>
                         <p class="text-gray-500"><strong>👥 Participants :</strong> {{$event->max_participants}}</p>
@@ -35,7 +35,7 @@
                         </form>
 
                         <!-- Bouton Modifier avec href corrigé -->
-                        <a href="{{route('edit')}}" 
+                        <a href="{{ route('event.show', ['edit_id' => $event->id]) }}" 
                            class="mt-2 block text-center bg-yellow-500 text-white py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
                             Modifier
                         </a>
